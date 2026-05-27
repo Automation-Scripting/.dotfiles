@@ -10,3 +10,6 @@ alias bash='source /home/avilamrs/.bashrc'
 
 # [2026-05-27 09:58]
 alias dotfiles='cd'
+
+# [2026-05-27 09:59]
+alias data='cd /data/avilamrs'
