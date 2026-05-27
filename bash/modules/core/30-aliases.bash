@@ -5,7 +5,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias c='clear'
 
-bash() {
+reloadsh() {
 	local cwd="$PWD"
 	# shellcheck disable=SC1090
 	source ~/.bashrc
