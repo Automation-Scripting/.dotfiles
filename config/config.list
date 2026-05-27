@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+# [2026-05-27 09:55]
+git config --global user.email nara.moraes@usp.br
+
+# [2026-05-27 09:55]
+git config --global user.name Nara Avila
