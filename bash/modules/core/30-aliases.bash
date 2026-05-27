@@ -4,4 +4,10 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias c='clear'
-alias reloadsh='source ~/.bashrc'
+
+bash() {
+	local cwd="$PWD"
+	# shellcheck disable=SC1090
+	source ~/.bashrc
+	cd "$cwd" || return
+}

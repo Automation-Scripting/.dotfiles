@@ -12,6 +12,22 @@ source "$HOME/.dotfiles/bash/bootstrap.sh"
 
 No HPC, abra um novo terminal ou rode `source ~/.bashrc`.
 
+## Diretorio Inicial Sem Quebrar source
+
+Se voce quer abrir todo terminal em um diretorio fixo, coloque o `cd` no seu `~/.bash_profile` (ou `~/.profile`) e nao no `~/.bashrc`.
+
+Exemplo para `~/.bash_profile`:
+
+```bash
+if [[ -d "$HOME/work" ]]; then
+  cd "$HOME/work"
+fi
+```
+
+Assim:
+- novo terminal entra no diretorio desejado
+- `source ~/.bashrc` nao muda seu diretorio atual
+
 ## O que foi migrado
 
 - Helpers de PATH: `path_prepend`, `path_append`
