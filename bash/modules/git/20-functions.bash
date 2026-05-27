@@ -1,13 +1,37 @@
 #!/usr/bin/env bash
 
-gh_clone_org_repos() {
+# clone [ORG]
+#
+# Clona automaticamente todos os repositórios
+# de uma organização GitHub.
+#
+# Uso:
+#
+#   clone OpenAI
+#
+# ou:
+#
+#   mkdir OpenAI
+#   cd OpenAI
+#   clone
+#
+# Se nenhum argumento for passado,
+# o nome da pasta atual será usado
+# como nome da organização.
+
+clone() {
   if ! command -v gh >/dev/null 2>&1; then
-    echo "gh CLI nao encontrado. Instale o GitHub CLI para usar esta funcao."
+    echo "gh CLI nao encontrado."
     return 1
   fi
 
   local org
-  org="$(basename "$PWD")"
+
+  if [[ -n "$1" ]]; then
+    org="$1"
+  else
+    org="$(basename "$PWD")"
+  fi
 
   echo "[info] Org detectada: $org"
   echo "[info] Destino: $PWD"
