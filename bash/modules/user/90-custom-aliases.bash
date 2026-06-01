@@ -19,3 +19,6 @@ alias sto='cd /storage/avilamrs'
 
 # [2026-06-01 10:34]
 alias code='cd /storage/avilamrs/code-space'
+
+# [2026-06-01 10:47]
+alias logs='cd /storage/avilamrs/condor_logs/'
