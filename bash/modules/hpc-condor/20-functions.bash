@@ -119,3 +119,46 @@ cjobpaths() {
     /^UserLog = / {print "UserLog: " $2}
   '
 }
+
+crmheld() {
+  _condor_require condor_rm || return 1
+  _condor_require condor_q || return 1
+
+  local nheld
+
+  nheld=$(condor_q -constraint "Owner == \"$USER\" && JobStatus == 5" -autoformat ClusterId | wc -l)
+
+  if [[ "$nheld" -eq 0 ]]; then
+    echo "Nenhum job HELD encontrado para $USER."
+    return 0
+  fi
+
+  echo "Encontrados $nheld jobs HELD para $USER."
+  read -rp "Deseja removê-los? [y/N] " ans
+
+  case "$ans" in
+    y|Y|yes|YES)
+      condor_rm -constraint "Owner == \"$USER\" && JobStatus == 5"
+      ;;
+    *)
+      echo "Operação cancelada."
+      ;;
+  esac
+}
+
+cheld() {
+  _condor_require condor_q || return 1
+
+  if [[ -z "${1:-}" ]]; then
+    echo "Uso: cheld <cluster[.proc]>"
+    return 1
+  fi
+
+  condor_q "$1" -af \
+    ClusterId \
+    ProcId \
+    JobStatus \
+    HoldReason \
+    HoldReasonCode \
+    HoldReasonSubCode
+}
