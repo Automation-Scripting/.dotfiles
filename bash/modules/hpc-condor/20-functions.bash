@@ -162,3 +162,25 @@ cheld() {
     HoldReasonCode \
     HoldReasonSubCode
 }
+
+cmemory() {
+  _condor_require condor_q || return 1
+
+  if [[ $# -eq 0 ]]; then
+    echo "Uso: cmemory <cluster[.proc]> [cluster[.proc] ...]"
+    return 1
+  fi
+
+  local job
+  for job in "$@"; do
+    echo "== Job $job =="
+    condor_q "$job" -run -af \
+      ClusterId \
+      ProcId \
+      MemoryUsage \
+      ImageSize \
+      RequestMemory \
+      Machine
+    echo ""
+  done
+}
