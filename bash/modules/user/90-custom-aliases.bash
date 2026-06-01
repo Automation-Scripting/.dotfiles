@@ -13,3 +13,6 @@ alias data='cd /data/avilamrs'
 
 # [2026-05-27 10:17]
 alias code-space='cd /data/avilamrs/code-space'
+
+# [2026-06-01 10:33]
+alias sto='cd /storage/avilamrs'
