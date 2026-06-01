@@ -193,3 +193,26 @@ cmemory() {
     }'
   done
 }
+
+ccpu() {
+  _condor_require condor_q || return 1
+
+  if [[ $# -eq 0 ]]; then
+    echo "Uso: ccpu <cluster[.proc]> [cluster[.proc] ...]"
+    return 1
+  fi
+
+  printf "%-10s %-8s %-10s %-10s %-10s %s\n" \
+    "Job" "ReqCPU" "CPUUsage" "UserCPU" "SysCPU" "Machine"
+
+  local job
+  for job in "$@"; do
+    condor_q "$job" -run -af \
+      ClusterId ProcId RequestCpus CpusUsage RemoteUserCpu RemoteSysCpu Machine |
+    awk '
+    {
+      printf "%s.%s %-8s %-10s %-10s %-10s %s\n",
+             $1,$2,$3,$4,$5,$6,$7
+    }'
+  done
+}
