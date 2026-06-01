@@ -171,16 +171,25 @@ cmemory() {
     return 1
   fi
 
+  printf "%-10s %-12s %-12s %-8s %s\n" \
+    "Job" "Used(MB)" "Req(MB)" "%Used" "Machine"
+
   local job
+
   for job in "$@"; do
-    echo "== Job $job =="
     condor_q "$job" -run -af \
-      ClusterId \
-      ProcId \
-      MemoryUsage \
-      ImageSize \
-      RequestMemory \
-      Machine
-    echo ""
+      ClusterId ProcId MemoryUsage RequestMemory Machine |
+    awk '
+    {
+      pct = 100*$3/$4
+
+      status=""
+      if (pct > 95)      status=" !!!"
+      else if (pct > 85) status=" !!"
+      else if (pct > 70) status=" !"
+
+      printf "%s.%s %-12.0f %-12.0f %6.1f%% %-20s%s\n",
+             $1,$2,$3,$4,pct,$5,status
+    }'
   done
 }
