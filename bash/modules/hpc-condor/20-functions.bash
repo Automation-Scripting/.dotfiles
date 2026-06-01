@@ -227,7 +227,7 @@ ctail() {
   local kind="${2:-out}"
   local logfile
 
-  logfile=$(find /storage/avilamrs/condor_logs \
+  logfile=$(find /storage/avilamrs/code-space/my-work/hic-bayes/data/condor_logs \
     -type f \
     -name "condor_${jobid}_*.${kind}" \
     | sort | head -n1)
