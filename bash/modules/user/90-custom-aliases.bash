@@ -22,3 +22,6 @@ alias code='cd /storage/avilamrs/code-space'
 
 # [2026-06-01 10:47]
 alias logs='cd /storage/avilamrs/condor_logs/'
+
+# [2026-06-01 13:10]
+alias hic='cd /storage/avilamrs/code-space/my-work/hic-bayes'
