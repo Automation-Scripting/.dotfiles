@@ -216,3 +216,26 @@ ccpu() {
     }'
   done
 }
+
+ctail() {
+  if [[ -z "${1:-}" ]]; then
+    echo "Uso: clog <jobid>"
+    return 1
+  fi
+
+  local jobid="$1"
+  local logfile
+
+  logfile=$(find /storage/avilamrs/condor_logs \
+    -type f \
+    \( -name "condor_${jobid}_*.out" -o -name "condor_${jobid}_*.err" \) \
+    | sort | head -n1)
+
+  if [[ -z "$logfile" ]]; then
+    echo "Nenhum log encontrado para job $jobid"
+    return 1
+  fi
+
+  echo "Seguindo: $logfile"
+  tail -f "$logfile"
+}
