@@ -12,10 +12,10 @@ alias dotfiles='cd /home/avilamrs/.dotfiles'
 alias data='cd /data/avilamrs'
 
 # [2026-05-27 10:17]
-alias code-space='cd /data/avilamrs/code-space'
+alias code-space='cd /storage/avilamrs/code-space'
 
 # [2026-06-01 10:33]
-alias sto='cd /storage/avilamrs'
+alias storage='cd /storage/avilamrs'
 
 # [2026-06-01 10:34]
 alias code='cd /storage/avilamrs/code-space'
