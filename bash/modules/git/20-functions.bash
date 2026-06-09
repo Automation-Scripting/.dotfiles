@@ -19,6 +19,15 @@
 # o nome da pasta atual será usado
 # como nome da organização.
 
+tag() {
+  if [[ -z "${1:-}" ]]; then
+    echo "Uso: tag <tag>"
+    return 1
+  fi
+  git tag -f "$1" && git push -f origin "$1"
+}
+
+
 clone() {
   if ! command -v gh >/dev/null 2>&1; then
     echo "gh CLI nao encontrado."
