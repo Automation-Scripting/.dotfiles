@@ -19,6 +19,51 @@
 # o nome da pasta atual será usado
 # como nome da organização.
 
+release_results() {
+    if [[ $# -ne 2 ]]; then
+        echo "Uso: release_results <release> <diretorio>"
+        return 1
+    fi
+
+    local release_name="$1"
+    local source_dir="$2"
+
+    if [[ ! -d "$source_dir" ]]; then
+        echo "Erro: diretório não encontrado: $source_dir"
+        return 1
+    fi
+
+    local tmp_zip
+    tmp_zip=$(mktemp "/tmp/${release_name}.XXXXXX.zip") || return 1
+
+    trap 'rm -f "$tmp_zip"' RETURN
+
+    local includes=()
+
+    for subdir in logs plots results; do
+        if [[ -d "$source_dir/$subdir" ]]; then
+            includes+=("$subdir")
+        fi
+    done
+
+    if [[ ${#includes[@]} -eq 0 ]]; then
+        echo "Erro: nenhuma subpasta logs/, plots/ ou results/ encontrada em $source_dir"
+        return 1
+    fi
+
+    echo "Incluindo: ${includes[*]}"
+
+    (
+        cd "$source_dir" || exit 1
+        zip -qr "$tmp_zip" "${includes[@]}"
+    ) || return 1
+
+    gh release create "$release_name" \
+        "$tmp_zip" \
+        --title "$release_name" \
+        --generate-notes
+}
+
 tag() {
   if [[ -z "${1:-}" ]]; then
     echo "Uso: tag <tag>"
