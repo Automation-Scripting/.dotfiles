@@ -35,6 +35,7 @@ release_results() {
 
     local tmp_zip
     tmp_zip=$(mktemp "/tmp/${release_name}.XXXXXX.zip") || return 1
+    rm -f "$tmp_zip"
 
     trap 'rm -f "$tmp_zip"' RETURN
 
