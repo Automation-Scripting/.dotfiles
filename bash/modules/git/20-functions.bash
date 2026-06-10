@@ -33,12 +33,12 @@ release_results() {
         return 1
     fi
 
-    local tmp_zip
-    tmp_zip=$(mktemp "/tmp/${release_name}.XXXXXX.zip") || return 1
-    rm -f "$tmp_zip"
+    local tmp_dir
+    tmp_dir=$(mktemp -d "/tmp/${release_name}.XXXXXX") || return 1
 
-    trap 'rm -f "$tmp_zip"' RETURN
+    trap 'rm -rf "$tmp_dir"' RETURN
 
+    local tmp_zip="$tmp_dir/${release_name}.zip"
     local includes=()
 
     for subdir in logs plots results; do
