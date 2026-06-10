@@ -20,18 +20,45 @@
 # como nome da organização.
 
 release_results() {
-    if [[ $# -ne 2 ]]; then
-        echo "Uso: release_results <release> <diretorio>"
+    if [[ $# -ne 1 ]]; then
+        echo "Uso: release_results <diretorio>"
         return 1
     fi
 
-    local release_name="$1"
-    local source_dir="$2"
+    local source_dir="$1"
 
     if [[ ! -d "$source_dir" ]]; then
         echo "Erro: diretório não encontrado: $source_dir"
         return 1
     fi
+
+    local system
+    local analysis
+
+    system=$(basename "$(dirname "$source_dir")")
+    analysis=$(basename "$source_dir")
+
+    local prefix="${system}_${analysis}"
+
+    local latest
+    latest=$(
+        gh release list --limit 200 \
+        | awk '{print $1}' \
+        | grep "^${prefix}-v0\." \
+        | sed 's/.*-v0\.//' \
+        | sort -n \
+        | tail -1
+    )
+
+    local next=1
+
+    if [[ -n "$latest" ]]; then
+        next=$((latest + 1))
+    fi
+
+    local release_name="${prefix}-v0.${next}"
+
+    echo "Release: $release_name"
 
     local tmp_dir
     tmp_dir=$(mktemp -d "/tmp/${release_name}.XXXXXX") || return 1
@@ -39,6 +66,7 @@ release_results() {
     trap 'rm -rf "$tmp_dir"' RETURN
 
     local tmp_zip="$tmp_dir/${release_name}.zip"
+
     local includes=()
 
     for subdir in logs plots results; do
@@ -48,7 +76,7 @@ release_results() {
     done
 
     if [[ ${#includes[@]} -eq 0 ]]; then
-        echo "Erro: nenhuma subpasta logs/, plots/ ou results/ encontrada em $source_dir"
+        echo "Erro: nenhuma subpasta logs/, plots/ ou results/ encontrada."
         return 1
     fi
 
