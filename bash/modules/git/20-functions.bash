@@ -32,9 +32,21 @@ release_results() {
         return 1
     fi
 
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "Erro: execute dentro de um repositório git."
+        return 1
+    fi
+
+    local current_branch
+    current_branch=$(git branch --show-current)
+
+    if [[ -z "$current_branch" ]]; then
+        echo "Erro: HEAD detached. Entre em uma branch antes de criar a release."
+        return 1
+    fi
+
     local system
     local analysis
-
     system=$(basename "$(dirname "$source_dir")")
     analysis=$(basename "$source_dir")
 
@@ -51,24 +63,38 @@ release_results() {
     )
 
     local next=1
-
-    if [[ -n "$latest" ]]; then
-        next=$((latest + 1))
-    fi
+    [[ -n "$latest" ]] && next=$((latest + 1))
 
     local release_name="${prefix}-v0.${next}"
 
-    echo "Release: $release_name"
+    echo "========================================="
+    echo "Release : $release_name"
+    echo "Branch  : $current_branch"
+    echo "========================================="
+
+    echo "Adicionando todos os arquivos não ignorados..."
+    git add -A || return 1
+
+    if git diff --cached --quiet; then
+        echo "Nada novo para commitar."
+    else
+        git commit -m "$release_name" || return 1
+    fi
+
+    git push origin "$current_branch" || return 1
+
+    local target_commit
+    target_commit=$(git rev-parse HEAD) || return 1
+
+    echo "Commit alvo: $target_commit"
 
     local tmp_dir
     tmp_dir=$(mktemp -d "/tmp/${release_name}.XXXXXX") || return 1
-
     trap 'rm -rf "$tmp_dir"' RETURN
 
     local tmp_zip="$tmp_dir/${release_name}.zip"
 
     local includes=()
-
     for subdir in logs plots results; do
         if [[ -d "$source_dir/$subdir" ]]; then
             includes+=("$subdir")
@@ -80,7 +106,7 @@ release_results() {
         return 1
     fi
 
-    echo "Incluindo: ${includes[*]}"
+    echo "Incluindo no zip: ${includes[*]}"
 
     (
         cd "$source_dir" || exit 1
@@ -89,6 +115,7 @@ release_results() {
 
     gh release create "$release_name" \
         "$tmp_zip" \
+        --target "$target_commit" \
         --title "$release_name" \
         --generate-notes
 }
