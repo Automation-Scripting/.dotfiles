@@ -28,3 +28,6 @@ alias hic='cd /storage/avilamrs/code-space/my-work/hic-bayes'
 
 # [2026-06-22 17:12]
 alias results='cd /storage/avilamrs/results/hic-bayes'
+
+# [2026-08-05 10:39]
+alias jet='cd /storage/avilamrs/code-space/my-work/jetscape-emulator'
