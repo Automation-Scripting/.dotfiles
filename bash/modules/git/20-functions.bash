@@ -37,6 +37,9 @@ release_results() {
         return 1
     fi
 
+    local repo_root
+    repo_root=$(git rev-parse --show-toplevel) || return 1
+
     local current_branch
     current_branch=$(git branch --show-current)
 
@@ -49,6 +52,14 @@ release_results() {
     local analysis
     system=$(basename "$(dirname "$source_dir")")
     analysis=$(basename "$source_dir")
+
+    local study_file="$repo_root/studies/$system/$analysis/study.md"
+
+    if [[ ! -f "$study_file" ]]; then
+        echo "Erro: study.md não encontrado:"
+        echo "  $study_file"
+        return 1
+    fi
 
     local prefix="${system}_${analysis}"
 
@@ -70,6 +81,9 @@ release_results() {
     echo "========================================="
     echo "Release : $release_name"
     echo "Branch  : $current_branch"
+    echo "System  : $system"
+    echo "Analysis: $analysis"
+    echo "Notes   : $study_file"
     echo "========================================="
 
     echo "Adicionando todos os arquivos não ignorados..."
@@ -117,7 +131,7 @@ release_results() {
         "$tmp_zip" \
         --target "$target_commit" \
         --title "$release_name" \
-        --generate-notes
+        --notes-file "$study_file"
 }
 
 tag() {
