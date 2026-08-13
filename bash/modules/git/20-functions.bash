@@ -95,7 +95,7 @@ release_results() {
     local tmp_zip="$tmp_dir/${release_name}.zip"
 
     local includes=()
-    for subdir in logs plots results; do
+    for subdir in logs plots chains analysis; do
         if [[ -d "$source_dir/$subdir" ]]; then
             includes+=("$subdir")
         fi
