@@ -102,7 +102,7 @@ release_results() {
     done
 
     if [[ ${#includes[@]} -eq 0 ]]; then
-        echo "Erro: nenhuma subpasta logs/, plots/ ou results/ encontrada."
+        echo "Erro: nenhuma subpasta logs/, plots/, chains/ ou analysis/ encontrada."
         return 1
     fi
 
