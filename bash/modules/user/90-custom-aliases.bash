@@ -31,3 +31,6 @@ alias results='cd /storage/avilamrs/results/hic-bayes'
 
 # [2026-08-05 10:39]
 alias jet='cd /storage/avilamrs/code-space/my-work/jetscape-emulator'
+
+# [2026-09-08 14:46]
+alias cs='condor_q avilamrs -nobatch'
