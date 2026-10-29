@@ -13,3 +13,11 @@ fi
 
 unset DOTFILES_ROOT
 unset MODULES_DIR
+
+# pyenv (shared across HPC nodes)
+export PYENV_ROOT="/storage/avilamrs/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+if command -v pyenv >/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
