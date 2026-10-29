@@ -34,3 +34,6 @@ alias jet='cd /storage/avilamrs/code-space/my-work/jetscape-emulator'
 
 # [2026-09-08 14:46]
 alias cs='condor_q avilamrs -nobatch'
+
+# [2026-10-29 12:53]
+alias exp='cd /storage/avilamrs/code-space/my-work/experimental-uncertainty-correlation-prediction'
